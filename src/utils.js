@@ -14,6 +14,11 @@ function generateUUID() {
     });
 }
 
+function findByUUID(array, id) {
+	return array.find(item => item.id === id);
+}
+
 module.exports = {
-	generateUUID
+	generateUUID,
+	findByUUID
 }
