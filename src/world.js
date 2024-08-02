@@ -6,7 +6,7 @@ class World{
 		this.width = size
 		this.height = size
 
-		this.id = 0
+		this.uuid = 0
 	}
 
 	start(){

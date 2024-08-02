@@ -20,11 +20,13 @@ let games = new class{
 	}
 
 	startMatch(){
+		console.log("Making a new match")
 		let gameWorld = new World(100)
-		gameWorld.id = this.matches.length + "_" + utils.generateUUID()
+		gameWorld.uuid = this.matches.length + "_" + utils.generateUUID()
 		gameWorld.start()
 
 		this.matches.push(gameWorld)
+		return gameWorld
 	}
 }
 
@@ -35,8 +37,17 @@ app.use(
 );
 
 app.get("/games", (req, res) => {
-	
 	res.send(games.matches)
+})
+
+app.get("/startMatch", (req, res) => {
+	try {
+		let startedGame = games.startMatch()
+		// res.sendStatus(200)
+		res.send({"uuid": startedGame.uuid})
+	} catch (error) {
+		res.sendStatus(500)
+	}
 })
 
 app.listen(port, () => {
