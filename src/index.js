@@ -56,7 +56,7 @@ app.get("/game/:uuid", (req, res) => {
 	}
 });
 
-app.post("/startMatch", (req, res) => {
+app.get("/startMatch", (req, res) => {
 	try {
 		let startedGame = games.startMatch()
 		// res.sendStatus(200)
@@ -69,17 +69,52 @@ app.post("/startMatch", (req, res) => {
 app.post("/join/:uuid", (req, res) => {
 	let requestedUuid = req.params.uuid;
 
-	let player = new Player(req.name)
+	let player = new Player()
 	player.uuid = utils.generateUUID()
+	player.name = req.body.name.toString()
+
+	player.controlCode = utils.generateCC()
 	
 	let match = utils.findByUUID(games.matches, requestedUuid)
 	if(match){
 		match.join(player)
-		res.status(200).send(utils.findByUUID(match.players, player.uuid))
+		res.status(200).send(
+			{
+				matchUUID: match.uuid,
+				playerUUID: player.uuid,
+				controlCode: player.controlCode
+			}
+		)
 	} else{
 		res.status(404).send({ error: 'Game not found' });
 	}
 })
+
+app.post("/move/:uuid", (req, res) => {
+	let requestedUuid = req.params.uuid;
+
+	let movement = {
+		controlCode: req.body.controlCode ?? "",
+		angle: req.body.angle ?? 0,
+		moving: req.body.moving ?? false,
+		shooting: req.body.shooting ?? false,
+	}
+
+	let match = utils.findByUUID(games.matches, requestedUuid)
+	if(match){
+		let player = utils.findByCC(match.players, movement.controlCode)
+		if(player){
+			match.move(player, movement)
+			res.status(200).send({ status: "success" })
+			return
+		}
+		res.status(404).send({ error: "Player not found" })
+		return
+	}
+	res.status(404).send({ error: "Game not found" });
+	return
+})
+
 
 app.listen(port, () => {
     console.log(`Server started\nPort ${port}`);
