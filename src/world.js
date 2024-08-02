@@ -5,10 +5,8 @@ class World{
 
 		this.width = size
 		this.height = size
-	}
 
-	create(){
-
+		this.id = 0
 	}
 
 	start(){
