@@ -1,4 +1,0 @@
-# Arena Server
-
-Typescrip
-
