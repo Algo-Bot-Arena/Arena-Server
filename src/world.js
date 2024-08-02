@@ -1,6 +1,6 @@
 
 class World{
-	constructor(size = 100){
+	constructor(size = 500){
 		this.running = false
 
 		this.width = size
@@ -16,9 +16,10 @@ class World{
 	}
 
 	findSpawn(){
+		// logic to make the player not spawn in a wall
 		return {
-			x:0,
-			y:0
+			x: this.width / 2,
+			y: this.width / 2
 		}
 	}
 

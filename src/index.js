@@ -22,7 +22,7 @@ let games = new class{
 
 	startMatch(){
 		console.log("Making a new match")
-		let gameWorld = new World(100)
+		let gameWorld = new World(500)
 		gameWorld.uuid = utils.generateUUID()
 		gameWorld.start()
 
@@ -36,6 +36,8 @@ app.use(express.json());
 app.use(
   cors()
 );
+
+app.use('/view', express.static(path.join(__dirname, 'viewer')))
 
 app.get("/games", (req, res) => {
 	res.send(games.matches.map(function(item){

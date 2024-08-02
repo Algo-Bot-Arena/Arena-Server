@@ -6,7 +6,11 @@ class Player{
 		this.vy = 0
 		this.name = name
 		this.uuid = 0
+
+		this.radius = 30
 	}
+
+	
 }
 
 module.exports = Player
