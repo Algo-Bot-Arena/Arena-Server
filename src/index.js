@@ -38,8 +38,21 @@ app.use(
 );
 
 app.get("/games", (req, res) => {
-	res.send(games.matches)
+	res.send(games.matches.map(function(item){
+		return item.uuid
+	}))
 })
+
+app.get("/game/:uuid", (req, res) => {
+	let requestedUuid = req.params.uuid;
+	let game = utils.findByUUID(games.matches, requestedUuid)
+  
+	if (game) {
+	  res.send(game);
+	} else {
+	  res.status(404).send({ error: 'Game not found' });
+	}
+});
 
 app.post("/startMatch", (req, res) => {
 	try {
@@ -47,18 +60,22 @@ app.post("/startMatch", (req, res) => {
 		// res.sendStatus(200)
 		res.send({"uuid": startedGame.uuid})
 	} catch (error) {
-		res.sendStatus(500)
+		res.status(500).send({ error: 'Game failed to start' })
 	}
 })
 
-app.post("/join", (req, res) => {
+app.post("/join/:uuid", (req, res) => {
+	let requestedUuid = req.params.uuid;
+
 	let player = new Player(req.name)
 	player.uuid = utils.generateUUID()
 	
-	let match = utils.findByUUID(games.matches, req.uuid)
+	let match = utils.findByUUID(games.matches, requestedUuid)
 	if(match){
 		match.join(player)
-		res.send(utils.findByUUID(match.players, player.uuid))
+		res.status(200).send(utils.findByUUID(match.players, player.uuid))
+	} else{
+		res.status(404).send({ error: 'Game not found' });
 	}
 })
 
