@@ -11,10 +11,10 @@ Returns every running game's UUID
 ### GET /game/{GAME UUID}
 Returns info about a currently running game
 
-### GET /startMatch
+### GET /startGame
 Starts a new match and returns the UUID
 
-### POST /join/{GAME UUID}
+### POST /joinGame/{GAME UUID}
 Returns the player UUID, match UUID and control code
 #### Params
 name: string: name of the bot
